@@ -3,24 +3,28 @@
         "sequential": true,
         "chunk_size": 32,
         "split_retain": true,
-        "positive_factor": 0.5,
+        "positive_factor": 1.0,
         "positive_ratio": 7,
         "retain_loss": "CE",
         "split": "train"
     },
     "training_args": {
-        "per_device_batch_size": 1,
-        "gradient_accumulation_steps": 1,
+        "per_device_train_batch_size": 1,
+        "gradient_accumulation_steps": 4,
         "learning_rate": 1e-5,
-        "num_epochs" : 7
+        "num_epochs": 5,
+        "gradient_checkpointing": true,
+        "logging_steps": 1
     },
     "model_params": {
-        "model_size": "7B",
-        "torch_dtype": "bfloat16",
-        "apply_lora": false,
+        "model_size": "1B",
+        "torch_dtype": "float16",
+        "apply_lora": true,
         "lora_r": 16,
         "lora_alpha": 64,
-        "train_last_k": true,
-        "k": 8
+        "lora_dropout": 0.05,
+        "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "up_proj", "down_proj", "gate_proj"],
+        "train_last_k": false,
+        "k": 0
     }
 }
