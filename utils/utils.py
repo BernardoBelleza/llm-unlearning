@@ -139,7 +139,7 @@ def format_eval_data(eval_data, subset, task_idx):
     
     df = pd.DataFrame(eval_data)
     df.rename(columns={keys[0]: "Loss", keys[1]: "RougeL", keys[2]: "EM"}, inplace=True)
-    df.drop(columns=keys[3:], inplace=True)  # Drop unnecessary metrics
+    df.drop(columns=[k for k in keys[3:] if k in df.columns], inplace=True)  # Drop unnecessary metrics
     return df, df["Loss"].max()
 
 
@@ -234,8 +234,8 @@ def plot_training_stats(log_history):
     
     # Generate cumulative step indices
     cumulative_steps = list(range(1, len(train_stats) + 1))
-    learning_rates = [entry['learning_rate'] for entry in train_stats]
-    grad_norms = [entry['grad_norm'] for entry in train_stats]
+    learning_rates = [entry.get('learning_rate', 0) for entry in train_stats]
+    grad_norms = [entry.get('grad_norm', 0) for entry in train_stats]
     
     # Create the figure and subplots
     fig, axs = plt.subplots(1, 2, figsize=(6, 3))
