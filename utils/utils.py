@@ -139,7 +139,10 @@ def format_eval_data(eval_data, subset, task_idx):
     
     df = pd.DataFrame(eval_data)
     df.rename(columns={keys[0]: "Loss", keys[1]: "RougeL", keys[2]: "EM"}, inplace=True)
-    df.drop(columns=[k for k in keys[3:] if k in df.columns], inplace=True)  # Drop unnecessary metrics
+    # remove runtime / speed columns if they exist; errors='ignore' ensures no KeyError
+    cols_to_drop = [k for k in keys[3:] if k in df.columns]
+    if cols_to_drop:
+        df.drop(columns=cols_to_drop, inplace=True, errors='ignore')  # Drop unnecessary metrics
     return df, df["Loss"].max()
 
 
